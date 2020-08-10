@@ -23,16 +23,16 @@ event zeek_init()
 
 	print "Content checking";
 	print "----------------";
-	print fmt("isnum abc   : %d", isnum("abc"));
-	print fmt("isnum 123   : %d", isnum("123"));
-	print fmt("isalpha ab  : %d", isalpha("ab"));
-	print fmt("isalpha 1a  : %d", isalpha("1a"));
-	print fmt("isalpha a1  : %d", isalpha("a1"));
-	print fmt("isalnum ab  : %d", isalnum("ab"));
-	print fmt("isalnum 1a  : %d", isalnum("1a"));
-	print fmt("isalnum a1  : %d", isalnum("a1"));
-	print fmt("isalnum 12  : %d", isalnum("12"));
-	print fmt("isalnum ##12: %d", isalnum("##12"));
+	print fmt("is_num abc   : %d", is_num("abc"));
+	print fmt("is_num 123   : %d", is_num("123"));
+	print fmt("is_alpha ab  : %d", is_alpha("ab"));
+	print fmt("is_alpha 1a  : %d", is_alpha("1a"));
+	print fmt("is_alpha a1  : %d", is_alpha("a1"));
+	print fmt("is_alnum ab  : %d", is_alnum("ab"));
+	print fmt("is_alnum 1a  : %d", is_alnum("1a"));
+	print fmt("is_alnum a1  : %d", is_alnum("a1"));
+	print fmt("is_alnum 12  : %d", is_alnum("12"));
+	print fmt("is_alnum ##12: %d", is_alnum("##12"));
 	print "";
 
 	print "String counting (input str 'aabbaa')";
@@ -46,22 +46,22 @@ event zeek_init()
 	print "Starts/endswith";
 	print "---------------";
 	local s3: string = "abcdefghi";
-	print fmt("startswith bro: %d", startswith(s3, "abc"));
-	print fmt("startswith ids: %d", startswith(s3, "ghi"));
-	print fmt("endswith ids: %d", endswith(s3, "ghi"));
-	print fmt("endswith bro: %d", endswith(s3, "abc"));
+	print fmt("starts_with bro: %d", starts_with(s3, "abc"));
+	print fmt("starts_with ids: %d", starts_with(s3, "ghi"));
+	print fmt("ends_with ids: %d", ends_with(s3, "ghi"));
+	print fmt("ends_with bro: %d", ends_with(s3, "abc"));
 	print "";
 
 	print "Transformations";
 	print "---------------";
-	print fmt("swapcase 'aBc': %s", swapcase("aBc"));
+	print fmt("swap_case 'aBc': %s", swap_case("aBc"));
 	print fmt("to_title 'bro is a very neat ids': '%s'", to_title("bro is a very neat ids"));
 	print fmt("to_title '   ': '%s'", to_title("   "));
 	print fmt("to_title '  a   c  ': '%s'", to_title("  a   c  "));
-	print fmt("removeprefix 'ananab'/'an' : %s", removeprefix("ananab", "an"));
-	print fmt("removeprefix 'anatnab'/'an': %s", removeprefix("anatnab", "an"));
-	print fmt("removesuffix 'banana'/'na' : %s", removesuffix("banana", "na"));
-	print fmt("removesuffix 'bantana'/'na': %s", removesuffix("bantana", "na"));
+	print fmt("remove_prefix 'ananab'/'an' : %s", remove_prefix("ananab", "an"));
+	print fmt("remove_prefix 'anatnab'/'an': %s", remove_prefix("anatnab", "an"));
+	print fmt("remove_suffix 'banana'/'na' : %s", remove_suffix("banana", "na"));
+	print fmt("remove_suffix 'bantana'/'na': %s", remove_suffix("bantana", "na"));
 	print "";
 
 	print fmt("find_str/rfind_str (input string '%s')", s3);

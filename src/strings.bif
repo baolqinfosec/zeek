@@ -1124,7 +1124,7 @@ function reverse%(str: string%) : string
 	return zeek::make_intrusive<zeek::StringVal>(s.length(), (const char*)s.c_str());
 	%}
 
-## Returns the number of time a substring occurs within a string
+## Returns the number of times a substring occurs within a string
 ##
 ## str: The string to search in.
 ## substr: The string to search for.
@@ -1204,7 +1204,7 @@ function find_str%(str: string, sub: string, start: count &default=0, end: int &
 	return zeek::val_mgr->Int(do_find_str(str, sub, start, end, false));
 	%}
 
-## Finds a string in another string, starting from the end.
+## The same as find(), but returns the highest index matching the substring instead of the smallest.
 ##
 ## str: The string to search in.
 ## substr: The string to search for.
@@ -1222,7 +1222,7 @@ function rfind_str%(str: string, sub: string, start: count &default=0, end: int 
 
 ## Returns whether a string starts with a substring.
 ##
-function startswith%(str: string, sub: string%) : bool
+function starts_with%(str: string, sub: string%) : bool
 	%{
 	string s = str->ToStdString();
 	return zeek::val_mgr->Bool(s.find(sub->ToStdString()) == 0);
@@ -1230,7 +1230,7 @@ function startswith%(str: string, sub: string%) : bool
 
 ## Returns whether a string ends with a substring.
 ##
-function endswith%(str: string, sub: string%) : bool
+function ends_with%(str: string, sub: string%) : bool
 	%{
 	string s = str->ToStdString();
 	string sub_s = sub->ToStdString();
@@ -1239,7 +1239,7 @@ function endswith%(str: string, sub: string%) : bool
 
 ## Returns whether an entire string represents a number.
 ##
-function isnum%(str: string%) : bool
+function is_num%(str: string%) : bool
 	%{
 	// Python's version of this method (which this is based on) just checks to see if every
 	// character in the string is a numeric value. If something more than this is desired, we
@@ -1254,7 +1254,7 @@ function isnum%(str: string%) : bool
 
 ## Returns whether an entire string is alphabetic characters.
 ##
-function isalpha%(str: string%) : bool
+function is_alpha%(str: string%) : bool
 	%{
 	const char* s = str->CheckString();
 	for ( int i = 0; i < str->Len(); i++ )
@@ -1266,7 +1266,7 @@ function isalpha%(str: string%) : bool
 
 ## Returns whether an entire string is alphanumeric characters
 ##
-function isalnum%(str: string%) : bool
+function is_alnum%(str: string%) : bool
 	%{
 	const char* s = str->CheckString();
 	for ( int i = 0; i < str->Len(); i++ )
@@ -1345,7 +1345,7 @@ function rjust%(str: string, width: count, fill: string &default=" "%) : string
 ##
 ## Returns: A copy of the str with the case of each character swapped.
 ##
-function swapcase%(str: string%) : string
+function swap_case%(str: string%) : string
 	%{
 	string s = str->ToStdString();
 	for ( size_t i = 0; i < s.size(); i++ )
@@ -1395,7 +1395,7 @@ function zfill%(str: string, width: count%) : string
 	%}
 
 ## Similar to lstrip(), except does the removal repeatedly if the pattern repeats at the start of the string.
-function removeprefix%(str: string, sub: string%) : string
+function remove_prefix%(str: string, sub: string%) : string
 	%{
 	// This could just use repeated calls to lstrip(), except for a couple of reasons:
 	// 1) lstrip() creates a StringVal at the end, and that would mean repeated recreation of objects
@@ -1419,7 +1419,7 @@ function removeprefix%(str: string, sub: string%) : string
 	%}
 
 ## Similar to rstrip(), except does the removal repeatedly if the pattern repeats at the end of the string.
-function removesuffix%(str: string, sub: string%) : string
+function remove_suffix%(str: string, sub: string%) : string
 	%{
 	// See the note in removeprefix for why this doesn't just call rstrip.
 	string s = str->ToStdString();
