@@ -1232,12 +1232,15 @@ function starts_with%(str: string, sub: string%) : bool
 ##
 function ends_with%(str: string, sub: string%) : bool
 	%{
+	if ( sub_s->Size() > str->Size() )
+		return zeek::val_mgr->Bool(false);
+
 	string s = str->ToStdString();
 	string sub_s = sub->ToStdString();
 	return zeek::val_mgr->Bool(s.rfind(sub_s) == (s.size() - sub_s.size()));
 	%}
 
-## Returns whether an entire string represents a number.
+## Returns whether an entire string consists only of digits.
 ##
 function is_num%(str: string%) : bool
 	%{
@@ -1305,20 +1308,14 @@ function ljust%(str: string, width: count, fill: string &default=" "%) : string
 
 %%{
 
-static zeek::StringValPtr do_rjust(zeek::StringVal* str, int width, zeek::StringVal* fill)
+static zeek::StringValPtr do_rjust(zeek::StringVal* str, int width, char fill)
 	{
-	if ( fill->Len() != 1 )
-		{
-		reporter->Error("Fill string passed to rjust() must be a single character");
-		return nullptr;
-		}
-
 	string new_s = str->ToStdString();
 
 	if ( width <= new_s.size() )
 		return { zeek::NewRef{}, str };
 
-	new_s.insert(0, width - new_s.size(), fill->CheckString()[0]);
+	new_s.insert(0, width - new_s.size(), fill);
 	return zeek::make_intrusive<zeek::StringVal>(new_s);
 	}
 
@@ -1336,7 +1333,13 @@ static zeek::StringValPtr do_rjust(zeek::StringVal* str, int width, zeek::String
 ##
 function rjust%(str: string, width: count, fill: string &default=" "%) : string
 	%{
-	return do_rjust(str, width, fill);
+	if ( fill->Len() != 1 )
+		{
+		reporter->Error("Fill string passed to rjust() must be a single character");
+		return nullptr;
+		}
+
+	return do_rjust(str, width, fill->CheckString()[0]);
 	%}
 
 ## Swaps the case of every alphabetic character in a string. For example, the string "aBc" be returned as "AbC".
@@ -1359,8 +1362,8 @@ function swap_case%(str: string%) : string
 	return zeek::make_intrusive<zeek::StringVal>(s);
 	%}
 
-## Converts a string to Title Case. This means that the first letter of each word in the string will be
-## captialized. See https://docs.python.org/2/library/stdtypes.html#str.title for more info.
+## Converts a string to Title Case. This changes the first character of each sequence of non-space characters
+## in the string to be capitalized. See https://docs.python.org/2/library/stdtypes.html#str.title for more info.
 ##
 ## str: The string to convert.
 ##
@@ -1373,7 +1376,6 @@ function to_title%(str: string%) : string
 	if ( pos == string::npos )
 		return zeek::IntrusivePtr<zeek::StringVal>(NewRef{}, str);
 
-	s[pos] = std::toupper(s[pos]);
 	while ( pos != string::npos )
 		{
 		s[pos] = std::toupper(s[pos]);
@@ -1390,8 +1392,7 @@ function to_title%(str: string%) : string
 ## Returns a copy of a string filled on the left side with zeroes. This is effectively rjust(str, width, "0").
 function zfill%(str: string, width: count%) : string
 	%{
-	zeek::StringVal zero("0");
-	return do_rjust(str, width, &zero);
+	return do_rjust(str, width, '0');
 	%}
 
 ## Similar to lstrip(), except does the removal repeatedly if the pattern repeats at the start of the string.
